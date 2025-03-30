@@ -12,20 +12,17 @@ class InstallCommand extends Command
 
     public function handle()
     {
-        $this->info('This will overwrite your authentication views.');
-        $confirm = $this->confirm('Do you want to continue?', true);
+        $this->info("This package will replace all Breeze authentication views.");
+    
+        if ($this->confirm('Do you want to continue?', true)) {
+            $this->call('vendor:publish', [
+                '--tag' => 'xblade-auth-views',
+                '--force' => true
+            ]);
 
-        if ($confirm) {
-            $process = new Process(['php', 'artisan', 'vendor:publish', '--provider=XbladeAuth\XbladeAuthServiceProvider']);
-            $process->run();
-
-            if ($process->isSuccessful()) {
-                $this->info('Xblade UI Auth views have been published successfully.');
-            } else {
-                $this->error('Failed to publish views.');
-            }
+            $this->info('✅ All authentication views have been replaced successfully.');
         } else {
-            $this->warn('Installation cancelled.');
+            $this->warn('❌ Installation canceled. No files were replaced.');
         }
     }
 }
