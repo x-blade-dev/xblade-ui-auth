@@ -5,24 +5,30 @@ namespace XbladeAuth;
 use Illuminate\Support\ServiceProvider;
 use XbladeAuth\Commands\InstallCommand;
 
-
 class XbladeAuthServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+        // Memuat tampilan dari package ini
         $this->loadViewsFrom(__DIR__.'/Resources/views', 'xblade-auth');
 
+        // Publikasi file views agar bisa digunakan di aplikasi Laravel pengguna
         $this->publishes([
             __DIR__.'/Resources/views/auth' => resource_path('views/auth'),
             __DIR__.'/Resources/views/dashboard.blade.php' => resource_path('views/dashboard.blade.php'),
             __DIR__.'/Resources/views/layouts' => resource_path('views/layouts'),
         ], 'xblade-auth-views');
+
+        // Mendaftarkan command hanya jika berjalan di console
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InstallCommand::class,
+            ]);
+        }
     }
 
     public function register()
     {
-        $this->commands([
-            InstallCommand::class,
-        ]);
+        // 
     }
 }

@@ -3,26 +3,29 @@
 namespace XbladeAuth\Commands;
 
 use Illuminate\Console\Command;
+use Symfony\Component\Process\Process;
 
 class InstallCommand extends Command
 {
-    protected $signature = 'xblade-auth:install';
-    protected $description = 'Install Xblade UI Auth and replace Laravel Breeze views';
+    protected $signature = 'xblade-ui-auth:install';
+    protected $description = 'Install Xblade UI Auth and publish views';
 
     public function handle()
     {
-        $this->warn("⚠️  Warning: This package will replace all Laravel Breeze authentication views.");
-        $this->warn("⚠️  You cannot undo this process automatically.");
+        $this->info('This will overwrite your authentication views.');
+        $confirm = $this->confirm('Do you want to continue?', true);
 
-        if ($this->confirm("Do you want to continue? (Y/N)", false)) {
-            $this->call('vendor:publish', [
-                '--tag' => 'xblade-auth-views',
-                '--force' => true,
-            ]);
+        if ($confirm) {
+            $process = new Process(['php', 'artisan', 'vendor:publish', '--provider=XbladeAuth\XbladeAuthServiceProvider']);
+            $process->run();
 
-            $this->info("✅ Xblade UI Auth installed successfully! Breeze views replaced.");
+            if ($process->isSuccessful()) {
+                $this->info('Xblade UI Auth views have been published successfully.');
+            } else {
+                $this->error('Failed to publish views.');
+            }
         } else {
-            $this->info("❌ Installation aborted. Breeze views were not replaced.");
+            $this->warn('Installation cancelled.');
         }
     }
 }

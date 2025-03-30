@@ -17,7 +17,7 @@
     },
     "scripts": {
         "post-autoload-dump": [
-            "@php artisan xblade-auth:install"
+            "@php artisan vendor:publish --provider=\"XbladeAuth\\XbladeAuthServiceProvider\" --force"
         ]
     },
         "require": {
