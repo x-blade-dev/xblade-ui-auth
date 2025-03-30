@@ -1,0 +1,27 @@
+{
+    "name": "xblade-auth/xblade-ui-auth",
+    "description": "A Laravel package to replace Laravel Breeze UI with a customizable Tailwind-based UI",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "XbladeAuth\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "XbladeAuth\\XbladeAuthServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php artisan xblade-auth:install"
+        ]
+    },
+    "require": {
+        "php": ">=8.0",
+        "illuminate/support": "^10.0"
+    }
+}
