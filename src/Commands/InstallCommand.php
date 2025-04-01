@@ -3,6 +3,7 @@
 namespace XbladeAuth\Commands;
 
 use Illuminate\Console\Command;
+use Symfony\Component\Process\Process;
 
 class InstallCommand extends Command
 {
@@ -11,25 +12,20 @@ class InstallCommand extends Command
 
     public function handle()
     {
-        $this->info("🚀 Installing Xblade UI Auth...");
+        $this->info('This will overwrite your authentication views.');
+        $confirm = $this->confirm('Do you want to continue?', true);
 
-        // Cek apakah service provider sudah terdaftar
-        if (!array_key_exists('XbladeAuth\XbladeAuthServiceProvider', app()->getLoadedProviders())) {
-            $this->error('❌ XbladeAuthServiceProvider belum terdaftar. Pastikan package ini di-load di config/app.php.');
-            return;
-        }
+        if ($confirm) {
+            $process = new Process(['php', 'artisan', 'vendor:publish', '--provider=XbladeAuth\XbladeAuthServiceProvider']);
+            $process->run();
 
-        // Konfirmasi sebelum mengganti file
-        if ($this->confirm('⚠️ This will replace all Breeze authentication views. Do you want to continue?', true)) {
-            // Jalankan perintah vendor:publish
-            $this->call('vendor:publish', [
-                '--tag' => 'xblade-auth-views',
-                '--force' => true
-            ]);
-
-            $this->info('✅ All authentication views have been replaced successfully.');
+            if ($process->isSuccessful()) {
+                $this->info('Xblade UI Auth views have been published successfully.');
+            } else {
+                $this->error('Failed to publish views.');
+            }
         } else {
-            $this->warn('❌ Installation canceled. No files were replaced.');
+            $this->warn('Installation cancelled.');
         }
     }
 }
