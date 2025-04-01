@@ -13,19 +13,21 @@ class XbladeAuthServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/Resources/views', 'xblade-auth');
 
         // Publish all views in one go
+    
         $this->publishes([
-            // Publish all auth views
-            __DIR__.'/Resources/views/auth' => resource_path('views/auth'),
-            
-            // Publish dashboard
-            __DIR__.'/Resources/views/dashboard.blade.php' => resource_path('views/dashboard.blade.php'),
-            
-            // Publish layouts
-            __DIR__.'/Resources/views/layouts' => resource_path('views/layouts'),
-            
-            // Publish profile and all its contents recursively
-            __DIR__.'/Resources/views/profile' => resource_path('views/profile'),
+            // Auth Pages
+            __DIR__.'/../Resources/views/auth' => resource_path('views/auth'),
+        
+            // Dashboard (berada di luar profile)
+            __DIR__.'/../Resources/views/dashboard.blade.php' => resource_path('views/dashboard.blade.php'),
+        
+            // Layouts
+            __DIR__.'/../Resources/views/layouts' => resource_path('views/layouts'),
+        
+            // Profile (beserta isinya)
+            __DIR__.'/../Resources/views/profile' => resource_path('views/profile'),
         ], 'xblade-auth-views');
+        
 
         // Register commands
         if ($this->app->runningInConsole()) {
