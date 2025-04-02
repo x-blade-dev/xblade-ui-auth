@@ -3,7 +3,7 @@
 namespace XbladeAuth;
 
 use Illuminate\Support\ServiceProvider;
-use XbladeUIAuth\Commands\InstallCommand;
+use XbladeAuth\Commands\InstallCommand;
 
 class XbladeAuthServiceProvider extends ServiceProvider
 {
@@ -30,11 +30,9 @@ class XbladeAuthServiceProvider extends ServiceProvider
         
         ], 'xblade-auth-views');
 
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                InstallCommand::class,
-            ]);
-        }
+        $this->commands([
+            \XbladeAuth\Commands\InstallCommand::class,
+        ]);
     }
 
     /**
