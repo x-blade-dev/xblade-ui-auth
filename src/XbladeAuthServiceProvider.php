@@ -30,8 +30,9 @@ class XbladeAuthServiceProvider extends ServiceProvider
         
         ], 'xblade-auth-views');
 
+        // Daftarkan perintah InstallCommand di sini
         $this->commands([
-            \XbladeAuth\Commands\InstallCommand::class,
+            InstallCommand::class,
         ]);
     }
 
