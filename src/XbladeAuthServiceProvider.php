@@ -1,6 +1,6 @@
 <?php
 
-namespace XbladeUIAuth;
+namespace XbladeAuth;
 
 use Illuminate\Support\ServiceProvider;
 use XbladeUIAuth\Commands\InstallCommand;
@@ -14,20 +14,15 @@ class XbladeAuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Load views from the package directory using the correct namespace
-        $this->loadViewsFrom(__DIR__.'/views', 'xblade-ui-auth'); // Memuat views dari direktori package
+        $this->loadViewsFrom(__DIR__.'/Resources/views', 'xblade-auth');
 
-        // Publish the entire views directory instead of individual files
         $this->publishes([
-            __DIR__.'/views' => resource_path('views'), // Menyalin views ke folder resources/views
-        ], 'xblade-ui-auth-views');        
+            __DIR__.'/Resources/views/auth' => resource_path('views/auth'),
+            __DIR__.'/Resources/views/dashboard.blade.php' => resource_path('views/dashboard.blade.php'),
+            __DIR__.'/Resources/views/layouts' => resource_path('views/layouts'),
+            __DIR__.'/Resources/views/profile' => resource_path('views/profile'),
 
-        // Register commands when running in console
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                InstallCommand::class,
-            ]);
-        }
+        ], 'xblade-auth-views');
     }
 
     /**
