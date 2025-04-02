@@ -1,6 +1,6 @@
 # XBlade UI Auth 🚀
 
-XBlade UI Auth is a package that replaces Laravel Breeze's authentication views with a modern and customizable UI built with Tailwind CSS.  
+XBlade UI Auth is a simple package that replaces Laravel Breeze's authentication views with a modern and customizable UI built with Tailwind CSS.  
 With just one installation step, you can enhance your Laravel authentication experience.
 
 ## ✨ Features
@@ -18,7 +18,7 @@ Run the following command to install the package:
 composer require xblade-auth/xblade-ui-auth
 ```
 
-Then publish the views:
+Then publish the views to replace all old views from Larave Breeze into xblade-ui-auth:
 
 ```sh
 php artisan vendor:publish --tag=xblade-auth-views --force
@@ -50,6 +50,20 @@ resources/views/auth/
 ```
 
 To modify styles, edit the Tailwind CSS classes inside the view files.
+
+## ✨ Update
+
+Run the following command to update the package:
+
+```sh
+composer update xblade-auth/xblade-ui-auth
+```
+
+Then publish the views to replace all old views from Larave Breeze into xblade-ui-auth:
+
+```sh
+php artisan vendor:publish --tag=xblade-auth-views --force
+```
 
 ## ❌ Uninstalling
 
