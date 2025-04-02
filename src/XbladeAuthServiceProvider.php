@@ -15,13 +15,13 @@ class XbladeAuthServiceProvider extends ServiceProvider
     public function boot()
     {
         // Load views from the package directory using the correct namespace
-        $this->loadViewsFrom(__DIR__.'/Resources/views', 'xblade-ui-auth');
+        $this->loadViewsFrom(__DIR__.'/views', 'xblade-ui-auth'); // Memuat views dari direktori package
 
         // Publish the entire views directory instead of individual files
         $this->publishes([
-            __DIR__.'/Resources/views' => resource_path('views/vendor/xblade-ui-auth'), // Use vendor folder for views
-        ], 'xblade-ui-auth-views');
-        
+            __DIR__.'/views' => resource_path('views'), // Menyalin views ke folder resources/views
+        ], 'xblade-ui-auth-views');        
+
         // Register commands when running in console
         if ($this->app->runningInConsole()) {
             $this->commands([
