@@ -28,7 +28,6 @@
                 value="{{ old('name', $user->name) }}" 
                 required 
                 autofocus 
-                disabled
                 autocomplete="name"
             >
             @if ($errors->get('name'))
