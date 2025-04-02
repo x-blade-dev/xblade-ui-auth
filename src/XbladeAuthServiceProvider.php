@@ -3,7 +3,6 @@
 namespace XbladeAuth;
 
 use Illuminate\Support\ServiceProvider;
-use XbladeAuth\Commands\InstallCommand;
 
 class XbladeAuthServiceProvider extends ServiceProvider
 {
@@ -29,20 +28,6 @@ class XbladeAuthServiceProvider extends ServiceProvider
             __DIR__.'/Resources/views/auth/confirm-password.blade.php' => resource_path('views/auth/confirm-password.blade.php'),
         
         ], 'xblade-auth-views');
-
-        // Daftarkan perintah InstallCommand di sini
-        $this->commands([
-            InstallCommand::class,
-        ]);
     }
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        // Additional services or bindings can be added here if needed
-    }
 }
