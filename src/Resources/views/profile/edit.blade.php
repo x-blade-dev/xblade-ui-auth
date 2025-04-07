@@ -56,13 +56,105 @@
 
                 <!-- User Profile Dropdown -->
                 <div class="relative">
-                    <button id="profile-menu-button" class="flex items-center space-x-2 focus:outline-none">
-                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 text-sm font-medium">
+                    <button id="profile-menu-button" class="flex items-center space-x-2 focus:outline-none group">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 text-sm font-medium group-hover:bg-gray-300 transition-colors">
                             {{ substr(Auth::user()->name, 0, 1) }}
                         </div>
                         <span class="text-gray-700 hidden md:inline">{{ Auth::user()->name }}</span>
+                        <svg class="w-4 h-4 text-gray-500 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
                     </button>
+                    
+                    <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">
+                        <!-- User Info -->
+                        <div class="px-4 py-2 border-b border-gray-100">
+                            <p class="text-sm font-medium text-gray-900">{{ Auth::user()->name }}</p>
+                            <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
+                        </div>
+
+                        <!-- Logout -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-t border-gray-100">
+                                Logout
+                            </button>
+                        </form>
+                        
+                        <!-- Menu Links -->
+                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile Settings</a>
+                        
+                        <!-- Package Info (Collapsible) -->
+                        <div class="border-t border-gray-100">
+                            <button id="togglePackageInfo" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex justify-between items-center">
+                                <span>About Package</span>
+                                <svg id="packageInfoIcon" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div id="packageInfoContent" class="hidden px-4 py-2 bg-gray-50 text-xs text-gray-500 space-y-1">
+                                <div class="flex justify-between">
+                                    <span>Version:</span>
+                                    <span class="font-medium">1.x.x</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Package:</span>
+                                    <span class="font-medium"><a href="https://x-blade.dev/package/xblade-ui-auth">xblade-auth/xblade-ui-auth</a></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Developer:</span>
+                                    <span class="font-medium"><a href="https://x-blade.dev">x-blade.dev</a></span>
+                                </div>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span>Instagram:</span>
+                                    <a href="https://instagram.com/xblade_dev" target="_blank" class="text-blue-500 hover:underline flex items-center">
+                                        @xblade_dev
+                                        <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const profileButton = document.getElementById('profile-menu-button');
+                        const dropdownMenu = document.getElementById('dropdownMenu');
+                        const togglePackageInfo = document.getElementById('togglePackageInfo');
+                        
+                        // Toggle main dropdown
+                        profileButton.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            dropdownMenu.classList.toggle('hidden');
+                        });
+                        
+                        // Toggle package info
+                        if (togglePackageInfo) {
+                            togglePackageInfo.addEventListener('click', function(e) {
+                                e.stopPropagation();
+                                const content = document.getElementById('packageInfoContent');
+                                const icon = document.getElementById('packageInfoIcon');
+                                
+                                content.classList.toggle('hidden');
+                                icon.classList.toggle('rotate-180');
+                            });
+                        }
+                        
+                        // Close when clicking outside
+                        document.addEventListener('click', function() {
+                            dropdownMenu.classList.add('hidden');
+                            const packageContent = document.getElementById('packageInfoContent');
+                            const packageIcon = document.getElementById('packageInfoIcon');
+                            
+                            if (packageContent) packageContent.classList.add('hidden');
+                            if (packageIcon) packageIcon.classList.remove('rotate-180');
+                        });
+                    });
+                </script>
             </div>
         </header>
 
@@ -156,32 +248,6 @@
         closeMobileMenuButton.addEventListener('click', toggleMobileMenu);
         mobileMenuOverlay.addEventListener('click', toggleMobileMenu);
 
-        // Profile dropdown functionality
-        const profileMenuButton = document.getElementById('profile-menu-button');
-        const profileDropdown = document.createElement('div');
-        profileDropdown.className = 'hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-sm py-1 z-10 border border-gray-200';
-        profileDropdown.innerHTML = `
-            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Profile</a>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                    Logout
-                </button>
-            </form>
-        `;
-        
-        profileMenuButton.parentElement.appendChild(profileDropdown);
-
-        profileMenuButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('hidden');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!profileMenuButton.contains(e.target) && !profileDropdown.contains(e.target)) {
-                profileDropdown.classList.add('hidden');
-            }
-        });
     });
 </script>
 @endsection
