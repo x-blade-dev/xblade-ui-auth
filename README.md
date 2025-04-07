@@ -27,8 +27,8 @@ php artisan vendor:publish --tag=xblade-auth-views --force
 If need:
 
 ```sh
-php artisan config:clear
-php artisan cache:clear
+npm run dev
+npm run build
 ```
 
 This will automatically replace Laravel Breeze's default authentication views with XBlade's UI.
@@ -91,8 +91,8 @@ php artisan vendor:publish --tag=breeze-views --force
 If need:
 
 ```sh
-php artisan config:clear
-php artisan cache:clear
+npm run dev
+npm run build
 ```
 
 ## 📜 License

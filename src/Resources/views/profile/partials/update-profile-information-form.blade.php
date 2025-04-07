@@ -48,7 +48,6 @@
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500" 
                 value="{{ old('email', $user->email) }}" 
                 required 
-                disabled
                 autocomplete="username"
             >
             @if ($errors->get('email'))
@@ -87,7 +86,7 @@
                 {{ __('Save') }}
             </button>
 
-            @if (session('status') === 'profile-updated'))
+            @if (session('status') === 'profile-updated')
                 <div 
                     id="save-message" 
                     class="text-sm text-gray-600"

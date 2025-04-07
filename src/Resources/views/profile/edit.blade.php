@@ -4,15 +4,101 @@
 
 @section('content')
 <div class="min-h-screen flex bg-gray-50">
-    <!-- Mobile Sidebar Overlay -->
-    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden hidden"></div>
+    <!-- Desktop Sidebar -->
+    <aside class="w-64 bg-white border-r border-gray-200 h-screen fixed hidden md:block z-20">
+        <div class="flex flex-col h-full p-4">
+            <div class="mb-8 p-2">
+                <h2 class="text-xl font-semibold text-gray-800">{{ config('app.name', 'Laravel') }}</h2>
+            </div>
+            
+            <nav class="flex-1 space-y-1">
+                <a href="{{ route('dashboard') }}" class="flex items-center p-3 rounded text-gray-700 hover:bg-gray-100 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ route('profile.edit') }}" class="flex items-center p-3 rounded text-gray-700 hover:bg-gray-100 transition bg-gray-100">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <span>Profile</span>
+                </a>
+            </nav>
+            
+            <div class="mt-auto">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="w-full flex items-center p-3 rounded text-gray-700 hover:bg-gray-100 transition">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        <span>Logout</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </aside>
 
-    <!-- Sidebar -->
-    <aside id="sidebar" class="w-64 bg-white text-gray-800 h-screen p-4 shadow-lg fixed md:relative transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30">
-        <div class="flex flex-col h-full">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-900">⚡ {{ config('app.name', 'Laravel') }}</h2>
-                <button id="close-sidebar" class="md:hidden text-gray-500">
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col md:ml-64">
+        <!-- Fixed Top Navigation -->
+        <header class="bg-white border-b border-gray-200 px-4 py-3 fixed w-full md:w-[calc(100%-16rem)] z-10">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <button id="mobile-menu-button" class="md:hidden text-gray-500 mr-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <h1 class="text-lg font-medium text-gray-800">Profile Settings</h1>
+                </div>
+
+                <!-- User Profile Dropdown -->
+                <div class="relative">
+                    <button id="profile-menu-button" class="flex items-center space-x-2 focus:outline-none">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 text-sm font-medium">
+                            {{ substr(Auth::user()->name, 0, 1) }}
+                        </div>
+                        <span class="text-gray-700 hidden md:inline">{{ Auth::user()->name }}</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Scrollable Profile Content -->
+        <main class="flex-1 pt-16 pb-4 overflow-y-auto">
+            <div class="p-4 md:p-6 max-w-3xl mx-auto space-y-6">
+                <!-- Update Profile Information -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <h2 class="text-lg font-semibold mb-4">Profile Information</h2>
+                    <p class="text-sm text-gray-600 mb-6">Update your account's profile information and email address.</p>
+                    @include('profile.partials.update-profile-information-form')
+                </div>
+
+                <!-- Update Password -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <h2 class="text-lg font-semibold mb-4">Update Password</h2>
+                    <p class="text-sm text-gray-600 mb-6">Ensure your account is using a long, random password to stay secure.</p>
+                    @include('profile.partials.update-password-form')
+                </div>
+
+                <!-- Delete Account -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <h2 class="text-lg font-semibold mb-4">Delete Account</h2>
+                    <p class="text-sm text-gray-600 mb-6">Once deleted, all resources and data will be permanently removed.</p>
+                    @include('profile.partials.delete-user-form')
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Sidebar (Drawer) -->
+    <div id="mobile-sidebar" class="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 transform -translate-x-full z-30 transition-transform duration-300 md:hidden">
+        <div class="flex flex-col h-full p-4">
+            <div class="flex justify-between items-center mb-8 p-2">
+                <h2 class="text-xl font-semibold text-gray-800">{{ config('app.name', 'Laravel') }}</h2>
+                <button id="close-mobile-menu" class="text-gray-500">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
@@ -20,135 +106,82 @@
             </div>
             
             <nav class="flex-1 space-y-1">
-                <a href="{{ route('dashboard') }}" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-gray-100 transition group">
-                    <span class="text-xl mr-3">🏠</span>
-                    <span class="group-hover:translate-x-1 transition-transform">Dashboard</span>
+                <a href="{{ route('dashboard') }}" class="flex items-center p-3 rounded text-gray-700 hover:bg-gray-100 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    <span>Dashboard</span>
                 </a>
-                <a href="{{ route('profile.edit') }}" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-gray-100 transition group">
-                    <span class="text-xl mr-3">👤</span>
-                    <span class="group-hover:translate-x-1 transition-transform">Profile</span>
+                <a href="{{ route('profile.edit') }}" class="flex items-center p-3 rounded text-gray-700 hover:bg-gray-100 transition bg-gray-100">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <span>Profile</span>
                 </a>
             </nav>
             
             <div class="mt-auto">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="w-full flex items-center p-3 rounded-lg text-gray-700 hover:bg-gray-100 transition group">
-                        <span class="text-xl mr-3">🚪</span>
-                        <span class="group-hover:translate-x-1 transition-transform">Logout</span>
+                    <button type="submit" class="w-full flex items-center p-3 rounded text-gray-700 hover:bg-gray-100 transition">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        <span>Logout</span>
                     </button>
                 </form>
             </div>
         </div>
-    </aside>
-
-    <!-- Main Content -->
-    <div class="flex-1 flex flex-col">
-        <!-- Navbar -->
-        <header class="bg-white px-4 py-3 flex justify-between items-center shadow-sm z-40">            
-            <div class="flex items-center space-x-4">
-                <button id="open-sidebar" class="md:hidden text-gray-500">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-                <h1 class="text-lg font-medium text-gray-800">Profile Settings</h1>
-            </div>
-
-            <div class="relative">
-                <button onclick="toggleDropdown()" class="flex items-center space-x-2 focus:outline-none">
-                    <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white text-sm font-medium">
-                        {{ substr(Auth::user()->name, 0, 1) }}
-                    </div>
-                    <span class="text-gray-700 hidden md:inline">{{ Auth::user()->name }}</span>
-                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </button>
-                
-                <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-1 z-10 border border-gray-100">
-                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            Logout
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </header>
-
-        <!-- Profile Content with overflow-y-scroll -->
-        <main class="flex-1 fixed w-full">
-            <div class="space-y-6 h-screen overflow-y-scroll mx-4">
-                <!-- Update Profile Information -->
-                <div class="bg-white rounded-lg shadow overflow-hidden p-6 mt-20">
-                    <div class="max-w-xl">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">Profile Information</h3>
-                        <p class="text-sm text-gray-600 mb-6">Update your account's profile information and email address.</p>
-                        @include('profile.partials.update-profile-information-form')
-                    </div>
-                </div>
-
-                <!-- Update Password -->
-                <div class="bg-white rounded-lg shadow overflow-hidden p-6">
-                    <div class="max-w-xl">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">Update Password</h3>
-                        <p class="text-sm text-gray-600 mb-6">Ensure your account is using a long, random password to stay secure.</p>
-                        @include('profile.partials.update-password-form')
-                    </div>
-                </div>
-
-                <!-- Delete Account -->
-                <div class="bg-white rounded-lg shadow overflow-hidden p-6">
-                    <div class="max-w-xl">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">Delete Account</h3>
-                        <p class="text-sm text-gray-600 mb-6">Once deleted, all resources and data will be permanently removed.</p>
-                        @include('profile.partials.delete-user-form')
-                    </div>
-                </div>
-            </div>
-        </main>
     </div>
+
+    <!-- Overlay for mobile menu -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden"></div>
 </div>
 
 <script>
-    // Mobile sidebar toggle
-    const sidebar = document.getElementById('sidebar');
-    const sidebarOverlay = document.getElementById('sidebar-overlay');
-    const openSidebarBtn = document.getElementById('open-sidebar');
-    const closeSidebarBtn = document.getElementById('close-sidebar');
+    // Mobile menu toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMobileMenuButton = document.getElementById('close-mobile-menu');
+        const mobileSidebar = document.getElementById('mobile-sidebar');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
 
-    openSidebarBtn.addEventListener('click', () => {
-        sidebar.classList.remove('-translate-x-full');
-        sidebarOverlay.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    });
-
-    closeSidebarBtn.addEventListener('click', () => {
-        sidebar.classList.add('-translate-x-full');
-        sidebarOverlay.classList.add('hidden');
-        document.body.style.overflow = 'auto';
-    });
-
-    sidebarOverlay.addEventListener('click', () => {
-        sidebar.classList.add('-translate-x-full');
-        sidebarOverlay.classList.add('hidden');
-        document.body.style.overflow = 'auto';
-    });
-
-    // Dropdown menu
-    function toggleDropdown() {
-        document.getElementById('dropdownMenu').classList.toggle('hidden');
-    }
-
-    document.addEventListener('click', function(event) {
-        const dropdown = document.getElementById('dropdownMenu');
-        const button = document.querySelector('[onclick="toggleDropdown()"]');
-        
-        if (!button.contains(event.target) && !dropdown.contains(event.target)) {
-            dropdown.classList.add('hidden');
+        function toggleMobileMenu() {
+            mobileSidebar.classList.toggle('-translate-x-full');
+            mobileMenuOverlay.classList.toggle('hidden');
+            document.body.classList.toggle('overflow-hidden');
         }
+
+        mobileMenuButton.addEventListener('click', toggleMobileMenu);
+        closeMobileMenuButton.addEventListener('click', toggleMobileMenu);
+        mobileMenuOverlay.addEventListener('click', toggleMobileMenu);
+
+        // Profile dropdown functionality
+        const profileMenuButton = document.getElementById('profile-menu-button');
+        const profileDropdown = document.createElement('div');
+        profileDropdown.className = 'hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-sm py-1 z-10 border border-gray-200';
+        profileDropdown.innerHTML = `
+            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Profile</a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                    Logout
+                </button>
+            </form>
+        `;
+        
+        profileMenuButton.parentElement.appendChild(profileDropdown);
+
+        profileMenuButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!profileMenuButton.contains(e.target) && !profileDropdown.contains(e.target)) {
+                profileDropdown.classList.add('hidden');
+            }
+        });
     });
 </script>
 @endsection
